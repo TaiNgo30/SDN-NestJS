@@ -6,9 +6,10 @@ import { TodoStatusValidationPipe } from "../pipe/TodoStatusValidation.pipe";
 import { AuthGuard } from "@nestjs/passport";
 import { User } from "../auth/user.decorator";
 import { UserEntity } from "../Entity/user.entity";
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth,ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
 // http://localhost:3000/api/todos
+@ApiBearerAuth()
 @ApiTags('Todos')
 @Controller("todos")
 @UseGuards(AuthGuard())
