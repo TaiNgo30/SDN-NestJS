@@ -28,6 +28,8 @@
 
 ## Project setup
 
+Go to src/app.module.ts, change your username and password of yours.
+
 ```bash
 $ npm install
 ```

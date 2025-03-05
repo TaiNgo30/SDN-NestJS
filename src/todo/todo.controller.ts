@@ -6,8 +6,10 @@ import { TodoStatusValidationPipe } from "../pipe/TodoStatusValidation.pipe";
 import { AuthGuard } from "@nestjs/passport";
 import { User } from "../auth/user.decorator";
 import { UserEntity } from "../Entity/user.entity";
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
 // http://localhost:3000/api/todos
+@ApiTags('Todos')
 @Controller("todos")
 @UseGuards(AuthGuard())
 export class TodoController {
@@ -16,6 +18,8 @@ export class TodoController {
 
   // http GET verb
   @Get()
+  @ApiOperation({ summary: 'Get all todos' })
+  @ApiResponse({ status: 200, description: 'Return all todos' })
   getAllTodos(
     @User() user: UserEntity
   ) {
@@ -26,6 +30,8 @@ export class TodoController {
 
   // http POST verb
   @Post()
+  @ApiOperation({ summary: 'Create a new todo' })
+  @ApiResponse({ status: 201, description: 'Todo created successfully' })
   createNewTodo(@Body(ValidationPipe) data: CreateTodoDto,
                 @User() user: UserEntity
   ) {
@@ -34,6 +40,20 @@ export class TodoController {
   }
 
   @Patch(":id")
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        status: {
+          type: 'string',
+          enum: ['OPEN', 'WIP', 'COMPLETED'],
+          example: 'WIP'
+        }
+      }
+    }
+  })
+  @ApiOperation({ summary: 'Update status todo' })
+  @ApiResponse({ status: 200, description: 'Updated status successfully' })
   updateTodo(
     @Body("status", TodoStatusValidationPipe) status: TodoStatus,
     @Param("id") id: number,
@@ -43,6 +63,8 @@ export class TodoController {
   }
 
   @Delete(":id")
+  @ApiOperation({ summary: 'Delete a todo' })
+  @ApiResponse({ status: 201, description: 'Deleted todo successfully' })
   deleteTodo(@Param("id") id: number,
              @User() user: UserEntity) {
     return this.todoService.delete(id, user);
